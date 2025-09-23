@@ -9,7 +9,7 @@ import java.util.HashMap;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
-public class DocumentSimilarityReducer {
+public class DocumentSimilarityReducer extends Reducer<Text, Text, Text, Text> {
     private final Map<String, Set<String>> documentWordMapping = new HashMap<>();
 
     @Override
