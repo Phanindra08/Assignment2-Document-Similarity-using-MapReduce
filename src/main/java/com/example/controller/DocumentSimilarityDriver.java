@@ -9,8 +9,10 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import com.example.DocumentSimilarityMapper;
 import com.example.DocumentSimilarityReducer;
 
+import java.io.IOException;
+
 public class DocumentSimilarityDriver {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         Configuration configuration = new Configuration();
         Job job = Job.getInstance(configuration, "Jaccard Similarity between documents");
 

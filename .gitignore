@@ -42,6 +42,12 @@ buildNumber.properties
 !.vscode/extensions.json
 .history/
 
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
 ### Operating System ###
 # macOS
 .DS_Store
