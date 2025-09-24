@@ -4,7 +4,7 @@
 
 # Assignment 2: Document Similarity using MapReduce
 
-**Name:** Sai Phanindra Kothuri
+**Name:** Sai Phanindra Kothuri <br >
 **Student ID:** 801420700
 
 ---
