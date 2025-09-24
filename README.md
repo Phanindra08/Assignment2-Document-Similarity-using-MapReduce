@@ -153,7 +153,7 @@ Document3 Sample text with different words
 ```
 
 **Obtained Output:**
-Showing output [screenshots](./shared_folder/output/Screenshots)
+[Showing output screenshots](./shared_folder/output/Screenshots)
 
 ---
 
