@@ -62,7 +62,7 @@ mvn clean install
 ### 3. Copy the JAR to Docker Container
 
 ```bash
-docker cp target/DocumentSimilarity-0.0.1-SNAPSHOT.jar resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
+docker cp /workspaces/Assignment2-Document-Similarity-using-MapReduce/target/DocumentSimilarity-0.0.1-SNAPSHOT.jar resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
 ```
 
 ### 4. Move Dataset to Docker Container
@@ -153,7 +153,17 @@ Document3 Sample text with different words
 ```
 
 **Obtained Output:**
-(Place your actual Hadoop output here once you run the job.)
+
+
+---
+
+## Performance Comparison
+
+| Configuration   | Execution Time | Notes                            |
+| --------------- | -------------- | -------------------------------- |
+| **3 Datanodes** | 13 sec         | Parallel execution across nodes  |
+| **1 Datanode**  | 24 sec         | All tasks handled by single node |
+
 
 ---
 
