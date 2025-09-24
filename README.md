@@ -1,16 +1,16 @@
 # Assignment 2: Document Similarity using MapReduce
 
-**Name:** 
+**Name:** Sai Phanindra Kothuri
 
-**Student ID:** 
+**Student ID:** 801420700
 
 ## Approach and Implementation
 
 ### Mapper Design
-[Explain the logic of your Mapper class. What is its input key-value pair? What does it emit as its output key-value pair? How does it help in solving the overall problem?]
+The `DocumentSimilarityMapper` class processes each document by taking a line of text as input. For each document, it extracts the filename to use as a unique ID. It then tokenizes the document's content, converts each word to lowercase, and stores them in a HashSet to keep only the unique words. Finally, it emits a key-value pair where the key is the document's filename and the value is a single, comma-separated string of all its unique words. This process efficiently transforms raw text into a structured format, preparing the data for the Reducer to easily compare word sets and calculate the Jaccard Similarity between document pairs.
 
 ### Reducer Design
-[Explain the logic of your Reducer class. What is its input key-value pair? How does it process the values for a given key? What does it emit as the final output? How do you calculate the Jaccard Similarity here?]
+The `DocumentSimilarityReducer` class calculates the Jaccard Similarity for every possible pair of documents. It receives a document's filename and its unique word set from the mapper. The reducer maintains a map to store the word sets of all documents it has processed. For each new document it receives, it compares it against every document already in the map. For each pair, it computes the **intersection** (common words) and **union** (total unique words) of their word sets. The Jaccard Similarity is then calculated by dividing the size of the intersection by the size of the union. Finally, it emits the pair of document names and their corresponding similarity score as its final output.
 
 ### Overall Data Flow
 [Describe how data flows from the initial input files, through the Mapper, shuffle/sort phase, and the Reducer to produce the final output.]
@@ -34,15 +34,15 @@ docker compose up -d
 Build the code using Maven:
 
 ```bash
-mvn clean package
+mvn clean install
 ```
 
-### 4. **Copy JAR to Docker Container**
+### 4. **Copying the JAR to Docker Container**
 
 Copy the JAR file to the Hadoop ResourceManager container:
 
 ```bash
-docker cp target/WordCountUsingHadoop-0.0.1-SNAPSHOT.jar resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
+docker cp /workspaces/Assignment2-Document-Similarity-using-MapReduce/target/DocumentSimilarity-0.0.1-SNAPSHOT.jar resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
 ```
 
 ### 5. **Move Dataset to Docker Container**
@@ -50,7 +50,7 @@ docker cp target/WordCountUsingHadoop-0.0.1-SNAPSHOT.jar resourcemanager:/opt/ha
 Copy the dataset to the Hadoop ResourceManager container:
 
 ```bash
-docker cp shared-folder/input/data/input.txt resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
+docker cp shared_folder/input_files/ resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/
 ```
 
 ### 6. **Connect to Docker Container**
@@ -72,13 +72,13 @@ cd /opt/hadoop-3.2.1/share/hadoop/mapreduce/
 Create a folder in HDFS for the input dataset:
 
 ```bash
-hadoop fs -mkdir -p /input/data
+hadoop fs -mkdir -p /input/dataset
 ```
 
 Copy the input dataset to the HDFS folder:
 
 ```bash
-hadoop fs -put ./input.txt /input/data
+hadoop fs -put ./input_files /input/dataset
 ```
 
 ### 8. **Execute the MapReduce Job**
@@ -86,7 +86,7 @@ hadoop fs -put ./input.txt /input/data
 Run your MapReduce job using the following command: Here I got an error saying output already exists so I changed it to output1 instead as destination folder
 
 ```bash
-hadoop jar /opt/hadoop-3.2.1/share/hadoop/mapreduce/WordCountUsingHadoop-0.0.1-SNAPSHOT.jar com.example.controller.Controller /input/data/input.txt /output1
+hadoop jar DocumentSimilarity-0.0.1-SNAPSHOT.jar com.example.controller.DocumentSimilarityDriver /input/dataset/input_files /output
 ```
 
 ### 9. **View the Output**
@@ -94,7 +94,7 @@ hadoop jar /opt/hadoop-3.2.1/share/hadoop/mapreduce/WordCountUsingHadoop-0.0.1-S
 To view the output of your MapReduce job, use:
 
 ```bash
-hadoop fs -cat /output1/*
+hadoop fs -cat /output/*
 ```
 
 ### 10. **Copy Output from HDFS to Local OS**
@@ -103,7 +103,7 @@ To copy the output from HDFS to your local machine:
 
 1. Use the following command to copy from HDFS:
     ```bash
-    hdfs dfs -get /output1 /opt/hadoop-3.2.1/share/hadoop/mapreduce/
+    hdfs dfs -get /output /opt/hadoop-3.2.1/share/hadoop/mapreduce/
     ```
 
 2. use Docker to copy from the container to your local machine:
@@ -113,9 +113,6 @@ To copy the output from HDFS to your local machine:
     ```bash
     docker cp resourcemanager:/opt/hadoop-3.2.1/share/hadoop/mapreduce/output1/ shared-folder/output/
     ```
-3. Commit and push to your repo so that we can able to see your output
-
-
 ---
 
 ## Challenges and Solutions
